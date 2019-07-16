@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <context id="generateTables" targetRuntime="MyBatis3">
+
+        <!-- 在配置文件中生成 <cache/> 标记
+        <plugin type="org.mybatis.generator.plugins.CachePlugin"/>-->
+        <!-- 为 pojo 实现 Serializable 接口
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>-->
+        <!-- 自定义物理分页  可生成支持Mysql数据的limit  不支持Oracle
+        <plugin type="org.mybatis.generator.plugins.page.PaginationPlugin"/>-->
+        <!-- 自定义查询指定字段
+        <plugin type="org.mybatis.generator.plugins.field.FieldsPlugin"/>-->
+        <!-- 开启支持内存分页   可生成 支持内存分布的方法及参数
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />-->
+        <!-- 为 pojo 重写 hashcode 和 equals 方法
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />-->
+
+        <!-- 为 pojo 重写 toString 方法-->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <!-- 为 Mapper 生成可返回主键的插入方法 -->
+        <plugin type="org.triski.faster.mybatis.plugins.InsertSelectiveWithGeneratedKeyPlugin"/>
+        <!-- 为 model 生成注释 -->
+        <plugin type="org.triski.faster.mybatis.plugins.ModelCommentPlugin"/>
+        <!-- 为 model 生成 Column 枚举类 -->
+        <plugin type="org.triski.faster.mybatis.plugins.Model2TablePlugin"/>
+        <!-- 生成一个直接使用 SQL 语句访问数据库的 Mapper -->
+        <plugin type="org.triski.faster.mybatis.plugins.SQLExecutorPlugin"/>
+        <!-- 为 Mapper 生辰批量插入方法，非本人编写，有一定的 bug -->
+        <plugin type="org.triski.faster.mybatis.plugins.BatchInsertPlugin"/>
+
+        <!-- MybatisXmlUtils 会在这里生成插件配置（源码第 80 行）-->
+        <!--generator.define.plugins-->
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="${datasource.driverClassName:com.mysql.jdbc.Driver}"
+                        connectionURL="${datasource.url}"
+                        userId="${datasource.username}"
+                        password="${datasource.password}"/>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="${generate.root.package}.model" targetProject="${generate.java.target:./src/main/java}">
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="${generate.xml.dir:mapper}" targetProject="${generate.xml.target:./src/main/resources}"/>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="${generate.root.package}.mapper"
+                             targetProject="${generate.java.target:./src/main/java}"/>
+
+        <!-- 这一句没什么用，表的配置会在代码中生成：TableGenerator:110 -->
+        <table tableName="it won't be use"/>
+
+    </context>
+
+</generatorConfiguration>

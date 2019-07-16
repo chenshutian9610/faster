@@ -1,0 +1,158 @@
+<html>
+
+<head>
+<meta charset="utf-8"/>
+<title>debug</title>
+<script src="https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
+<style>
+    table {
+        position: relative;
+        top: 60px;
+        left: 40px;
+    }
+</style>
+</head>
+<body>
+<script>
+    var array=JSON.parse('${jsonValues}');
+
+    function withoutAjax(){
+        var url = document.getElementById("url")
+        var p = document.getElementById("p")
+        var str = parent[parent.selectedIndex].value + child[child.selectedIndex].value;
+        var input = document.getElementsByTagName("input");
+        var s = [];
+        var m = 0;
+        for (var n = 0; n < input.length; n++)
+            if (input[n].value != "")
+                s[m++] = input[n].id + "=" + input[n].value
+        var result = s.length != 0 ? str + "?" + s.join("&&") : str;
+        url.innerHTML = "go to:&emsp;&emsp;&nbsp;&nbsp;" + result;
+        p.innerHTML = "返回结果:"
+        location=result;
+    }
+
+    function go() {
+        var url = document.getElementById("url")
+        var p = document.getElementById("p")
+        var str = parent[parent.selectedIndex].value + child[child.selectedIndex].value;
+        var input = document.getElementsByTagName("input");
+        var s = [];
+        var m = 0;
+        for (var n = 0; n < input.length; n++)
+            if (input[n].value != "")
+                s[m++] = input[n].id + "=" + input[n].value
+        var result = s.length != 0 ? str + "?" + s.join("&&") : str;
+        url.innerHTML = "go to:&emsp;&emsp;&nbsp;&nbsp;" + result;
+        p.innerHTML = "返回结果:"
+        $.ajax({
+            url: result,
+            success: function (data) {
+                console.clear()
+                console.log('------ ' + result + ' ------')
+                console.log(data)
+                var str = JSON.stringify(data)
+                p.innerHTML = "返回结果:&emsp;" + ( str.length > 100? '请点击 F12 打开控制台查看' : str )
+            }
+        });
+    }
+
+    function clear(tag) {
+        var childs = tag.childNodes;
+
+        /* length 是动态变化的, 和 java 的 Iterator 一样的道理 */
+        /* 如果把 while 换成 for(var n=0;n<childs.length;n++) 绝对报错 */
+        while (childs.length > 0)
+            tag.removeChild(childs[0])
+    }
+
+    function change() {
+        for (var i in array) {
+            if (array[i]['root'] == parent[parent.selectedIndex].value) {
+                clear(child);
+                for (var j in array[i]['methods']) {
+                    var comment = array[i]['methods'][j]['comment'];
+                    var option = document.createElement("option");
+                    option.value = array[i]['methods'][j]['method'];
+                    option.innerHTML = array[i]['methods'][j]['method'] + (comment.length == 0 ? "" : " (" + comment + ")");
+                    child.appendChild(option);
+                }
+            }
+        }
+    }
+
+    function list() {
+        for (var i in array)
+            for (var j in array[i]['methods'])
+                if (child[child.selectedIndex].value == array[i]['methods'][j]['method']) {
+                    clear(table);
+                    for (var n in array[i]['methods'][j]['args']) {
+                        var text = document.createElement("input");
+                        text.id = array[i]['methods'][j]['args'][n]['arg'];
+                        var name = document.createElement('p');
+                        name.innerHTML = array[i]['methods'][j]['args'][n]['arg'];
+                        var describe = document.createElement('p');
+                        var comment = array[i]['methods'][j]['args'][n]['comment'];
+                        describe.innerHTML = (comment.length == 0 ? "" : "&emsp;" + comment + "&emsp;");
+                        var tr = document.createElement("tr");
+                        var td1 = document.createElement("td");
+                        var td2 = document.createElement("td");
+                        var td3 = document.createElement("td");
+                        td1.appendChild(name);
+                        td2.appendChild(describe);
+                        td3.appendChild(text);
+
+                        tr.appendChild(td1);
+                        tr.appendChild(td2);
+                        tr.appendChild(td3);
+                        table.appendChild(tr);
+                    }
+                    break;
+                }
+    }
+</script>
+<table>
+    <tr>
+        <td>
+            <div id="url">go to:</div>
+            <div id="p">返回结果:</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <select id="parent" onchange="change()"></select>
+            <select id="child"></select>&nbsp;
+            <button onclick="list()">list</button>&nbsp;
+            <button onclick="go()">async</button>
+            <button onclick="withoutAjax()">sync</button>
+            <br>
+        </td>
+    </tr>
+</table>
+<table id="table"></table>
+<script>
+    var parent = document.getElementById("parent");
+    var child = document.getElementById("child");
+    var table = document.getElementById("table");
+    var center = document.getElementById("center");
+    for (var i in array) {
+        var comment = array[i]['comment'];
+        var option = document.createElement("option");
+        option.value = array[i]['root']
+        option.innerHTML = array[i]['root'] + (comment.length == 0 ? "" : " (" + comment + ")");
+        parent.appendChild(option);
+    }
+    for (var i in array) {
+        if (array[i]['root'] == parent[parent.selectedIndex].value) {
+            for (var j in array[i]['methods']) {
+                var comment = array[i]['methods'][j]['comment'];
+                var option = document.createElement("option");
+                option.value = array[i]['methods'][j]['method'];
+                option.innerHTML = array[i]['methods'][j]['method'] + (comment.length == 0 ? "" : " (" + comment + ")");
+                child.appendChild(option);
+            }
+        }
+    }
+</script>
+</body>
+</html>
