@@ -1,6 +1,6 @@
 package org.triski.faster.mybatis;
 
-import org.triski.faster.mybatis.generator.main.TableGenerator;
+import org.triski.faster.mybatis.generator.TableGenerator;
 
 /**
  * @author triski
@@ -10,8 +10,7 @@ import org.triski.faster.mybatis.generator.main.TableGenerator;
  */
 class Main {
     public static void main(String args[]) throws Exception {
-        String packageToScan = Main.class.getPackage().getName();
-        TableGenerator generator = new TableGenerator(packageToScan);
+        TableGenerator generator = new TableGenerator();
         generator.forward();    //  正向工程
         generator.reverse();    //  逆向工程
     }

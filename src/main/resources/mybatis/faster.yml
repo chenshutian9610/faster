@@ -1,0 +1,8 @@
+datasource:
+  driverClassName:
+  url:
+  username:
+  password:
+
+faster:
+  style: lombok

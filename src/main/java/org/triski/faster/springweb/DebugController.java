@@ -83,7 +83,6 @@ public class DebugController {
         if (logger.isDebugEnabled()) {
             logger.debug("find controllers with @Controller: {}", classes);
         }
-        // 开始处理
         // 初始化 JavadocCache
         List<Class> javadocList = new ArrayList<>();
         javadocList.addAll(classes);
@@ -149,7 +148,7 @@ public class DebugController {
                             for (Field field : MethodInfo) {
                                 isIgnore = field.isAnnotationPresent(Ignore.class) || ignoreFields.contains(field.getName());
                                 if (isIgnore == false) {
-                                    argInfo = new ArgInfo(field.getName(), getDoc(clazz, field));
+                                    argInfo = new ArgInfo(field.getName(), getDoc(parameters[i].getType(), field));
                                     if (argInfo.getComment().length() == 0) {
                                         argInfo.setComment(getComment(field));
                                     }

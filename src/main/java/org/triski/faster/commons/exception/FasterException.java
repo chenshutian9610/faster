@@ -10,6 +10,10 @@ public class FasterException extends RuntimeException {
     public FasterException() {
     }
 
+    public FasterException(Throwable cause) {
+        super(cause);
+    }
+
     public FasterException(String message, Object... params) {
         super(StringUtilsExt.newMessage(message, params));
     }

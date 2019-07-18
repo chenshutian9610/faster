@@ -26,7 +26,7 @@
         <!-- 为 model 生成注释 -->
         <plugin type="org.triski.faster.mybatis.plugins.ModelCommentPlugin"/>
         <!-- 为 model 生成 Column 枚举类 -->
-        <plugin type="org.triski.faster.mybatis.plugins.Model2TablePlugin"/>
+        <!--<plugin type="org.triski.faster.mybatis.plugins.Model2TablePlugin"/>-->
         <!-- 生成一个直接使用 SQL 语句访问数据库的 Mapper -->
         <plugin type="org.triski.faster.mybatis.plugins.SQLExecutorPlugin"/>
         <!-- 为 Mapper 生辰批量插入方法，非本人编写，有一定的 bug -->

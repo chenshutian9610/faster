@@ -12,13 +12,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
-
     String name() default "";
 
     String comment() default "";
 
     String meta() default "ENGINE=InnoDB DEFAULT CHARSET=utf8";
-
-    /* 为 false 时只扫描但不生成表 */
-    boolean generate() default true;
 }

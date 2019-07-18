@@ -1,4 +1,4 @@
-package org.triski.faster.mybatis.generator.main;
+package org.triski.faster.mybatis.generator;
 
 import org.apache.commons.lang3.StringUtils;
 

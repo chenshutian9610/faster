@@ -1,6 +1,10 @@
 package org.triski.faster.commons.utils;
 
 import lombok.experimental.UtilityClass;
+import org.triski.faster.commons.exception.FasterException;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -19,7 +23,17 @@ public class PropertiesUtils {
             properties.load(in);
             return properties;
         } catch (IOException e) {
-            throw new RuntimeException(String.format("路径 %s 错误", classpath));
+            throw new FasterException(e);
+        }
+    }
+
+    public Properties getProperties(File file) {
+        try {
+            Properties properties = new Properties();
+            properties.load(new FileInputStream(file));
+            return properties;
+        } catch (IOException e) {
+            throw new FasterException(e);
         }
     }
 
