@@ -1,4 +1,4 @@
-package org.triski.faster.mybatis.generator;
+package org.triski.faster.mybatis.generator.reverse;
 
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.GeneratedXmlFile;
@@ -33,7 +33,7 @@ import java.util.*;
  * <p>
  * 增加一个 generate(List<TableConfiguration>) 方法，使得可以通过代码添加表
  */
-class MyBatisGeneratorExtension {
+public class MyBatisGenerator {
     private Configuration configuration;
     private ShellCallback shellCallback;
     private List<GeneratedJavaFile> generatedJavaFiles;
@@ -44,7 +44,7 @@ class MyBatisGeneratorExtension {
     /* modify here */
     private boolean xmlMerge = false;
 
-    public MyBatisGeneratorExtension(Configuration configuration, ShellCallback shellCallback, List<String> warnings) throws InvalidConfigurationException {
+    public MyBatisGenerator(Configuration configuration, ShellCallback shellCallback, List<String> warnings) throws InvalidConfigurationException {
         if (configuration == null) {
             throw new IllegalArgumentException(Messages.getString("RuntimeError.2"));
         } else {

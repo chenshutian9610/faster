@@ -4,5 +4,11 @@ datasource:
   username:
   password:
 
-faster:
+mybatisGenerator:
   style: lombok
+  rootPackage:
+  javaDir:
+  resourcesDir:
+  plugin:
+    -
+    -

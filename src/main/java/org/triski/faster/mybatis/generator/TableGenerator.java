@@ -15,6 +15,7 @@ import org.triski.faster.commons.utils.PackageUtils;
 import org.triski.faster.commons.utils.PropertiesUtils;
 import org.triski.faster.mybatis.annotation.Column;
 import org.triski.faster.mybatis.annotation.Table;
+import org.triski.faster.mybatis.generator.reverse.MyBatisGenerator;
 
 import java.io.File;
 import java.io.IOException;
@@ -137,7 +138,7 @@ public class TableGenerator {
             List<String> warnings = new ArrayList<String>();
             Configuration config = new ConfigurationParser(warnings).parseConfiguration(in);
             DefaultShellCallback callback = new DefaultShellCallback(true);
-            MyBatisGeneratorExtension generator = new MyBatisGeneratorExtension(config, callback, warnings);
+            MyBatisGenerator generator = new MyBatisGenerator(config, callback, warnings);
             generator.setXmlMerge(false);
             generator.generate(toTableConfigurations(class2table));
 

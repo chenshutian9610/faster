@@ -48,14 +48,14 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="${generate.root.package}.model" targetProject="${generate.java.target:./src/main/java}">
+        <javaModelGenerator targetPackage="${mybatisGenerator.rootPackage}.model" targetProject="${mybatisGenerator.javaDir:src/main/java}">
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="${generate.xml.dir:mapper}" targetProject="${generate.xml.target:./src/main/resources}"/>
+        <sqlMapGenerator targetPackage="mapper" targetProject="${mybatisGenerator.resourcesDir:src/main/resources}"/>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="${generate.root.package}.mapper"
-                             targetProject="${generate.java.target:./src/main/java}"/>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="${mybatisGenerator.rootPackage}.mapper"
+                             targetProject="${javaDir:src/main/java}"/>
 
         <!-- 这一句没什么用，表的配置会在代码中生成：TableGenerator:110 -->
         <table tableName="it won't be use"/>
