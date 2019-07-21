@@ -66,8 +66,9 @@ public class InsertSelectiveWithGeneratedKeyPlugin extends PluginAdapter {
             dest.addElement(e);
 
         Attribute attribute = new Attribute("id", "insertSelectiveWithGeneratedKey");
-        for (Attribute a : src.getAttributes())
+        for (Attribute a : src.getAttributes()) {
             dest.addAttribute("insertSelective".equals(a.getValue()) ? attribute : a);
+        }
         dest.addAttribute(new Attribute("useGeneratedKeys", "true"));
         dest.addAttribute(new Attribute("keyProperty", id));
     }

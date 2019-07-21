@@ -15,21 +15,21 @@ import org.triski.faster.commons.FasterProperties;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.mybatis.generator.api.MyBatisGenerator;
+import org.triski.faster.commons.exception.FasterException;
 
 /**
  * @author chenshutian
  * @date 2019/7/18
  */
 @Data
-public class MybatisGeneratorExt {
-    private static final Logger logger = LoggerFactory.getLogger(MybatisGeneratorExt.class);
-
-    private static final String MYBATIS_GENERATOR_CONFIG = "mybatis/generatorConfig.xml";
+public class CodeGenerator {
+    private static final Logger logger = LoggerFactory.getLogger(CodeGenerator.class);
 
     private FasterProperties fasterProperties;
     private InputStream inputStream;
 
-    public MybatisGeneratorExt(String propertiesClasspath) {
+    public CodeGenerator(String propertiesClasspath) {
         fasterProperties = FasterProperties.load(propertiesClasspath);
         if (StringUtils.isBlank(fasterProperties.getProperty(FasterProperties.ROOT_PACKAGE))) {
             String className = new RuntimeException().getStackTrace()[1].getClassName();
@@ -46,13 +46,16 @@ public class MybatisGeneratorExt {
         // 逆向工程开始
         try (InputStream in = inputStream != null ? inputStream : MybatisXmlUtils.process(fasterProperties)) {
             List<String> warnings = new ArrayList<>();
-            Configuration config = new ConfigurationParser(warnings).parseConfiguration(in);
+            List<TableConfiguration> tableConfigurations = toTableConfigurations(tableList);
+            Configuration configuration = new ConfigurationParser(warnings).parseConfiguration(in);
+            configuration.getContexts().forEach(context -> {
+                tableConfigurations.forEach(tableConfiguration -> context.addTableConfiguration(tableConfiguration));
+            });
             DefaultShellCallback callback = new DefaultShellCallback(true);
-            MyBatisGenerator generator = new MyBatisGenerator(config, callback, warnings);
-            generator.setXmlMerge(false);
-            generator.generate(toTableConfigurations(tableList));
+            MyBatisGenerator generator = new MyBatisGenerator(configuration, callback, warnings);
+            generator.generate(null);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FasterException(e);
         }
     }
 

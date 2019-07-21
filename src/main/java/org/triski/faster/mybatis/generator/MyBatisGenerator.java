@@ -1,4 +1,4 @@
-package org.triski.faster.mybatis.generator.reverse;
+package org.triski.faster.mybatis.generator;
 
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.GeneratedXmlFile;
@@ -41,9 +41,6 @@ public class MyBatisGenerator {
     private List<String> warnings;
     private Set<String> projects;
 
-    /* modify here */
-    private boolean xmlMerge = false;
-
     public MyBatisGenerator(Configuration configuration, ShellCallback shellCallback, List<String> warnings) throws InvalidConfigurationException {
         if (configuration == null) {
             throw new IllegalArgumentException(Messages.getString("RuntimeError.2"));
@@ -68,14 +65,6 @@ public class MyBatisGenerator {
         }
     }
 
-    public boolean isXmlMerge() {
-        return xmlMerge;
-    }
-
-    public void setXmlMerge(boolean xmlMerge) {
-        this.xmlMerge = xmlMerge;
-    }
-
     public void generate(ProgressCallback callback) throws SQLException, IOException, InterruptedException {
         this.generate(callback, (Set) null, (Set) null, true);
     }
@@ -92,8 +81,8 @@ public class MyBatisGenerator {
     public void generate(List<TableConfiguration> tableConfigurations) throws SQLException, IOException, InterruptedException {
 
         ProgressCallback callback = new NullProgressCallback();
-        this.generatedJavaFiles.clear();
-        this.generatedXmlFiles.clear();
+        getGeneratedJavaFiles().clear();
+        getGeneratedXmlFiles().clear();
         ObjectFactory.reset();
         RootClassInfo.reset();
         Object contextsToRun;
@@ -134,12 +123,12 @@ public class MyBatisGenerator {
 
         while (var11.hasNext()) {
             context = (Context) var11.next();
-            context.generateFiles((ProgressCallback) callback, this.generatedJavaFiles, this.generatedXmlFiles, this.warnings);
+            context.generateFiles((ProgressCallback) callback, getGeneratedJavaFiles(), getGeneratedXmlFiles(), this.warnings);
         }
 
 
-        ((ProgressCallback) callback).saveStarted(this.generatedXmlFiles.size() + this.generatedJavaFiles.size());
-        var11 = this.generatedXmlFiles.iterator();
+        ((ProgressCallback) callback).saveStarted(getGeneratedXmlFiles().size() + getGeneratedJavaFiles().size());
+        var11 = getGeneratedXmlFiles().iterator();
 
         while (var11.hasNext()) {
             GeneratedXmlFile gxf = (GeneratedXmlFile) var11.next();
@@ -289,8 +278,7 @@ public class MyBatisGenerator {
             File targetFile = new File(directory, gxf.getFileName());
             String source;
             if (targetFile.exists()) {
-                /* modify here *///gxf.isMergeable()
-                if (this.xmlMerge) {
+                if (gxf.isMergeable()) {
                     source = XmlFileMergerJaxp.getMergedSource(gxf, targetFile);
                 } else if (this.shellCallback.isOverwriteEnabled()) {
                     source = gxf.getFormattedContent();

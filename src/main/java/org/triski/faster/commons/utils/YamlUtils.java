@@ -56,9 +56,13 @@ public class YamlUtils {
             if (value instanceof Map) {
                 ymlMap2properties(key.toString(), (Map) value, properties);
             } else if (value instanceof List) {
-                properties.setProperty(key.toString(), value == null ? "" : StringUtils.join((List) value, ","));
+                if (value != null) {
+                    properties.setProperty(key.toString(), StringUtils.join((List) value, ","));
+                }
             } else {
-                properties.setProperty(key.toString(), value == null ? "" : value.toString());
+                if (value != null) {
+                    properties.setProperty(key.toString(), value.toString());
+                }
             }
         });
     }

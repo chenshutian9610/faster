@@ -2,6 +2,7 @@ package org.triski.faster.mybatis.generator.reverse;
 
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+import org.triski.faster.commons.utils.converter.StringConverter;
 import org.triski.faster.commons.utils.CamelCaseUtils;
 
 import java.util.ArrayList;
@@ -13,14 +14,14 @@ import java.util.List;
  */
 @Data
 public class TableList {
-    private TableNameConverter converter;
-    private TableNameConverter defaultConverter = tableName -> CamelCaseUtils.toCapitalizeCamel(tableName);
+    private StringConverter converter;
+    private StringConverter defaultConverter = tableName -> CamelCaseUtils.toCapitalizeCamel(tableName);
     private List<TableInfo> tableInfos = new ArrayList<>();
 
     public TableList() {
     }
 
-    public TableList(TableNameConverter converter) {
+    public TableList(StringConverter converter) {
         this.converter = converter;
     }
 

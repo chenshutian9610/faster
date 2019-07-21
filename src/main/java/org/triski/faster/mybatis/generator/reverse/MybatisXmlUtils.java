@@ -4,9 +4,9 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.triski.faster.commons.FasterProperties;
+import org.triski.faster.commons.utils.converter.XMLConverter;
 import org.triski.faster.commons.utils.ClasspathUtils;
-import org.triski.faster.commons.utils.PlaceHolderParser;
-
+import org.triski.faster.commons.utils.PlaceHolderUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,8 @@ import java.io.InputStream;
 public class MybatisXmlUtils {
 
     private static final String MYBATIS_GENERATOR_CONFIG = "mybatis/generatorConfig.xml";
+    private static final String PLUGIN_PLACE_HOLDER = "<!--generator.define.plugins-->";
+    private static final String PLUGIN_TAG_TEMPLATE = "<plugin type=\"%s\"/>";
 
     public InputStream process(FasterProperties fasterProperties) throws IOException {
         File file = ClasspathUtils.getFile(MYBATIS_GENERATOR_CONFIG);
@@ -30,20 +32,18 @@ public class MybatisXmlUtils {
     }
 
     private String processVariable(String xml, FasterProperties fasterProperties) {
-        return PlaceHolderParser.process(xml, fasterProperties.getProperties());
+        return PlaceHolderUtils.process(xml, fasterProperties, new XMLConverter());
     }
 
     private String processPlugin(String xml, FasterProperties fasterProperties) {
-        final String placeHolder = "<!--generator.define.plugins-->";
-        final String template = "<plugin type=\"%s\"/>";
         String pluginStr = fasterProperties.getProperty(FasterProperties.MYBATIS_GENERATOR_PLUGIN);
         if (StringUtils.isNotBlank(pluginStr)) {
             StringBuilder sb = new StringBuilder();
             String[] pluginArr = pluginStr.split(",");
             for (String plugin : pluginArr) {
-                sb.append(String.format(template, plugin)).append("\n");
+                sb.append(String.format(PLUGIN_TAG_TEMPLATE, plugin)).append("\n");
             }
-            return xml.replace(placeHolder, sb.toString());
+            return xml.replace(PLUGIN_PLACE_HOLDER, sb.toString());
         }
         return xml;
     }

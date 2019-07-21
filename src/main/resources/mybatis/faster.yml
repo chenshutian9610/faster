@@ -1,12 +1,15 @@
 datasource:
-  driverClassName:
-  url:
-  username:
-  password:
+  driverClassName: com.mysql.jdbc.Driver
+  url: jdbc:mysql:///demo?characterEncoding=utf8
+  username: root
+  password: ''
 
 mybatisGenerator:
-  style: lombok
-  rootPackage:
+  style:
+    lombok: true
+    java8:
+    comment:
+  rootPackage: org.triski
   javaDir:
   resourcesDir:
   plugin:

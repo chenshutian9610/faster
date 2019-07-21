@@ -1,6 +1,8 @@
 package org.triski.faster.commons.utils;
 
 import lombok.experimental.UtilityClass;
+import org.triski.faster.commons.enumeration.DateTimeRegexEnum;
+import org.triski.faster.commons.exception.FasterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,20 +35,23 @@ public class DateUtils {
         return calendar.getTime();
     }
 
-    public String format(Date date) {
+    public String toString(Date date) {
         SimpleDateFormat df = new SimpleDateFormat(datetime);
         return df.format(date);
     }
 
-    /**
-     * @param datetimeString 可以是 {datetime}，{date} 或 {time}
-     * @return
-     */
+    public String toString(Date date, String pattern){
+        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        return df.format(date);
+    }
+
+    /** datetimeString 可以是 {datetime}，{date} 或 {time} */
     public Date parse(String datetimeString) {
-        boolean isDate = datetimeString.contains("-");
-        boolean isTime = datetimeString.contains(":");
+        boolean isDateTime = DateTimeRegexEnum.DATE_TIME.match(datetimeString);
+        boolean isDate = DateTimeRegexEnum.DATE.match(datetimeString);
+        boolean isTime = DateTimeRegexEnum.TIME.match(datetimeString);
         String format = "";
-        if (isDate && isTime) {
+        if (isDateTime) {
             format = datetime;
         } else if (isDate) {
             format = date;
@@ -57,7 +62,7 @@ public class DateUtils {
         try {
             return df.parse(datetimeString);
         } catch (ParseException e) {
-            throw new RuntimeException(String.format("can not parse '%s' to date", datetimeString));
+            throw new FasterException("can not parse '{}' to date", datetimeString);
         }
     }
 }
