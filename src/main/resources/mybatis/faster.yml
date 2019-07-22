@@ -9,6 +9,6 @@ mybatisGenerator:
   rootPackage:
   javaDir:
   resourcesDir:
-  plugin:
+  plugins:
     -
     -

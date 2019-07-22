@@ -24,8 +24,6 @@ import java.util.List;
 public class MybatisGeneratorExt {
     private static final Logger logger = LoggerFactory.getLogger(MybatisGeneratorExt.class);
 
-    private static final String MYBATIS_GENERATOR_CONFIG = "mybatis/generatorConfig.xml";
-
     private FasterProperties fasterProperties;
     private InputStream inputStream;
 

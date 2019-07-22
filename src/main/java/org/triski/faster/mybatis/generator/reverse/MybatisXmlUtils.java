@@ -5,7 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.triski.faster.commons.FasterProperties;
 import org.triski.faster.commons.utils.ClasspathUtils;
-import org.triski.faster.commons.utils.PlaceHolderParser;
+import org.triski.faster.commons.utils.PlaceHolderUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -30,7 +30,7 @@ public class MybatisXmlUtils {
     }
 
     private String processVariable(String xml, FasterProperties fasterProperties) {
-        return PlaceHolderParser.process(xml, fasterProperties.getProperties());
+        return PlaceHolderUtils.process(xml, fasterProperties.getProperties());
     }
 
     private String processPlugin(String xml, FasterProperties fasterProperties) {

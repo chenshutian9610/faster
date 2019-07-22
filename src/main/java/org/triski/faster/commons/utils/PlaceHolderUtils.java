@@ -1,6 +1,5 @@
 package org.triski.faster.commons.utils;
 
-import lombok.Data;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,7 +14,7 @@ import java.util.regex.Pattern;
  * @export process
  */
 @UtilityClass
-public class PlaceHolderParser {
+public class PlaceHolderUtils {
 
     public String process(String msg, Object... params) {
         int i = 0;

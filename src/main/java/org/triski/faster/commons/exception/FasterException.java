@@ -1,6 +1,6 @@
 package org.triski.faster.commons.exception;
 
-import org.triski.faster.commons.utils.PlaceHolderParser;
+import org.triski.faster.commons.utils.PlaceHolderUtils;
 
 /**
  * @author triski
@@ -15,6 +15,6 @@ public class FasterException extends RuntimeException {
     }
 
     public FasterException(String message, Object... params) {
-        super(PlaceHolderParser.process(message, params));
+        super(PlaceHolderUtils.process(message, params));
     }
 }

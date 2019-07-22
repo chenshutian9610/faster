@@ -17,17 +17,17 @@ import java.util.Properties;
 public class FasterProperties {
     private static final Logger logger = LoggerFactory.getLogger(FasterProperties.class);
 
-    public static final String DATABASE_DRIVER_CLASS_NAME = "";
-    public static final String DATABASE_URL = "";
-    public static final String DATABASE_USERNAME = "";
-    public static final String DATABASE_PASSWORD = "";
+    public static final String DATABASE_DRIVER_CLASS_NAME = "datasource.driverClassName";
+    public static final String DATABASE_URL = "datasource.url";
+    public static final String DATABASE_USERNAME = "datasource.username";
+    public static final String DATABASE_PASSWORD = "datasource.password";
 
-    public static final String MYBATIS_GENERATOR_STYLE = "";
-    public static final String MYBATIS_GENERATOR_PLUGIN = "";
+    public static final String MYBATIS_GENERATOR_STYLE = "mybatisGenerator.style";
+    public static final String MYBATIS_GENERATOR_PLUGIN = "mybatisGenerator.plugins";
 
-    public static final String ROOT_PACKAGE = "";
-    public static final String JAVA_DIR = "";
-    public static final String RESOURCES_DIR = "";
+    public static final String ROOT_PACKAGE = "mybatisGenerator.rootPackage";
+    public static final String JAVA_DIR = "mybatisGenerator.javaDir";
+    public static final String RESOURCES_DIR = "mybatisGenerator.resourcesDir";
 
     private Properties properties = new Properties();
 
