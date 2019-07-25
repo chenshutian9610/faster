@@ -14,25 +14,25 @@
         <plugin type="org.mybatis.generator.plugins.page.PaginationPlugin"/>-->
         <!-- 自定义查询指定字段
         <plugin type="org.mybatis.generator.plugins.field.FieldsPlugin"/>-->
-        <!-- 开启支持内存分页   可生成 支持内存分布的方法及参数
+        <!-- 开启支持内存分页可生成 支持内存分布的方法及参数
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />-->
-        <!-- 为 pojo 重写 hashcode 和 equals 方法
-        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />-->
 
-        <!-- 为 pojo 重写 toString 方法-->
+        <!-- 官方插件 -->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
-        <!-- 为 Mapper 生成可返回主键的插入方法 -->
-        <plugin type="org.triski.faster.mybatis.plugins.InsertSelectiveWithGeneratedKeyPlugin"/>
-        <!-- 为 model 生成注释 -->
-        <plugin type="org.triski.faster.mybatis.plugins.ModelCommentPlugin"/>
-        <!-- 为 model 生成 Column 枚举类 -->
-        <!--<plugin type="org.triski.faster.mybatis.plugins.Model2TablePlugin"/>-->
-        <!-- 生成一个直接使用 SQL 语句访问数据库的 Mapper -->
-        <plugin type="org.triski.faster.mybatis.plugins.SQLExecutorPlugin"/>
-        <!-- 为 Mapper 生辰批量插入方法，非本人编写，有一定的 bug -->
-        <plugin type="org.triski.faster.mybatis.plugins.BatchInsertPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.FluentBuilderMethodsPlugin"/>
 
-        <!-- MybatisXmlUtils 会在这里生成插件配置（源码第 80 行）-->
+        <!-- 自定义插件 -->
+        <plugin type="org.triski.faster.dao.mybatis.plugins.QuerySelectivePlugin"/>
+        <plugin type="org.triski.faster.dao.mybatis.plugins.ModelColumnPlugin"/>
+        <plugin type="org.triski.faster.dao.mybatis.plugins.ModelStylePlugin"/>
+        <plugin type="org.triski.faster.dao.mybatis.plugins.SQLExecutorPlugin"/>
+        <plugin type="org.triski.faster.dao.mybatis.plugins.InsertSelectiveWithGeneratedKeyPlugin"/>
+        <plugin type="org.triski.faster.dao.mybatis.plugins.BatchInsertPlugin"/>
+        <plugin type="org.triski.faster.dao.mybatis.plugins.BatchUpdatePlugin"/>
+
+        <!-- 由 mybatisGenerator.plugins 指定 -->
         <!--generator.define.plugins-->
 
         <commentGenerator>
@@ -48,7 +48,8 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="${mybatisGenerator.rootPackage}.model" targetProject="${mybatisGenerator.javaDir:src/main/java}">
+        <javaModelGenerator targetPackage="${mybatisGenerator.rootPackage}.model"
+                            targetProject="${mybatisGenerator.javaDir:src/main/java}">
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
@@ -57,7 +58,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="${mybatisGenerator.rootPackage}.mapper"
                              targetProject="${javaDir:src/main/java}"/>
 
-        <!-- 这一句没什么用，表的配置会在代码中生成：TableGenerator:110 -->
+        <!-- 这一句没什么用 !!! -->
         <table tableName="it won't be use"/>
 
     </context>

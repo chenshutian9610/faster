@@ -56,9 +56,23 @@ public class YamlUtils {
             if (value instanceof Map) {
                 ymlMap2properties(key.toString(), (Map) value, properties);
             } else if (value instanceof List) {
-                properties.setProperty(key.toString(), value == null ? "" : StringUtils.join((List) value, ","));
+                if (value != null) {
+                    String keyStr = key.toString();
+                    String valueStr = StringUtils.join((List) value, ",");
+                    if (key.toString().contains("-")) {
+                        properties.setProperty(CamelCaseUtils.toUnCapitalizeCamel(keyStr), valueStr);
+                    }
+                    properties.setProperty(keyStr, valueStr);
+                }
             } else {
-                properties.setProperty(key.toString(), value == null ? "" : value.toString());
+                if (value != null) {
+                    String keyStr = key.toString();
+                    String valueStr = value.toString();
+                    if (key.toString().contains("-")) {
+                        properties.setProperty(CamelCaseUtils.toUnCapitalizeCamel(keyStr), valueStr);
+                    }
+                    properties.setProperty(keyStr, valueStr);
+                }
             }
         });
     }

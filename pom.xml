@@ -34,7 +34,12 @@
             <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- package need: mybatis-->
+        <!-- package need: dao -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.3.Final</version>
+        </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
