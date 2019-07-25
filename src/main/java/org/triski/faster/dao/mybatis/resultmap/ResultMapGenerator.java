@@ -1,4 +1,4 @@
-package org.triski.faster.dao.mybatis.generator.resultmap;
+package org.triski.faster.dao.mybatis.resultmap;
 
 import com.thoughtworks.xstream.XStream;
 import lombok.experimental.UtilityClass;

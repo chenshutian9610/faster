@@ -1,4 +1,4 @@
-package org.triski.faster.dao.mybatis.generator.reverse;
+package org.triski.faster.dao.mybatis;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
@@ -26,11 +26,13 @@ import java.util.Map;
 /**
  * @author chenshutian
  * @date 2019/7/18
+ * @export generateModel
  */
 @UtilityClass
 public class MybatisUtils {
     private static final Logger logger = LoggerFactory.getLogger(MybatisUtils.class);
 
+    /** 逆向工程: 使用原生的 generatorConfig.xml 配置 */
     public void generateModel(InputStream inputStream) {
         try {
             List<String> warnings = new ArrayList<>();
@@ -38,18 +40,19 @@ public class MybatisUtils {
             DefaultShellCallback callback = new DefaultShellCallback(true);
             MyBatisGenerator generator = new MyBatisGenerator(configuration, callback, warnings);
             generator.generate(null);
+            inputStream.close();
         } catch (IOException | SQLException | InterruptedException | InvalidConfigurationException | XMLParserException e) {
             throw new FasterException(e);
         }
     }
 
+    /** 逆向工程 */
     public void generateModel(String propertiesClasspath, Map<String, String> tables) {
         if (tables.size() == 0) {
             return;
         }
         FasterProperties fasterProperties = config(propertiesClasspath);
-        // 逆向工程开始
-        try (InputStream in = MybatisXmlUtils.process(fasterProperties)) {
+        try (InputStream in = GeneratorConfigXmlUtils.process(fasterProperties)) {
             List<String> warnings = new ArrayList<>();
             List<TableConfiguration> tableConfigurations = toTableConfigurations(tables);
             Configuration configuration = new ConfigurationParser(warnings).parseConfiguration(in);
@@ -64,6 +67,7 @@ public class MybatisUtils {
         }
     }
 
+    /** 初始化配置 */
     private FasterProperties config(String propertiesClasspath) {
         FasterProperties fasterProperties = FasterProperties.load(propertiesClasspath);
         if (StringUtils.isBlank(fasterProperties.getProperty(FasterProperties.ROOT_PACKAGE))) {
@@ -74,6 +78,7 @@ public class MybatisUtils {
         return fasterProperties;
     }
 
+    /** 将 Map 转化为 TableConfiguration 列表 */
     private List<TableConfiguration> toTableConfigurations(Map<String, String> tables) {
         List<TableConfiguration> tableConfigurations = new ArrayList<>();
         Context context = new Context(ModelType.CONDITIONAL);

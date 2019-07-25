@@ -1,4 +1,4 @@
-package org.triski.faster.dao.mybatis.generator.resultmap;
+package org.triski.faster.dao.mybatis.resultmap;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;

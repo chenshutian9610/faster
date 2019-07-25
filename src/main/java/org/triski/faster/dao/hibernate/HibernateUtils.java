@@ -2,6 +2,8 @@ package org.triski.faster.dao.hibernate;
 
 import com.mysql.jdbc.Driver;
 import lombok.experimental.UtilityClass;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.cfgxml.spi.LoadedConfig;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 /**
  * @author chenshutian
  * @date 2019/7/25
+ * @export generateTable, doInTransaction
  */
 @UtilityClass
 public class HibernateUtils {
@@ -35,6 +38,7 @@ public class HibernateUtils {
 
     private FasterProperties properties;
 
+    /** 正向工程 */
     public void generateTable(String propertiesClasspath) {
         LoadedConfig loadedConfig = config(propertiesClasspath);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().configure(loadedConfig).build();
@@ -44,10 +48,24 @@ public class HibernateUtils {
         serviceRegistry.close();
     }
 
+    /** 使用 session 操作数据库 */
+    public static void doInTransaction(SessionFactory factory, Runner runner) {
+        Session session = factory.getCurrentSession();
+        session.beginTransaction();
+
+        // 执行操作
+        runner.run(session);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    /** 初始化 hibernate 配置 */
     private LoadedConfig config(String propertiesClasspath) {
         properties = FasterProperties.load(propertiesClasspath);
         LoadedConfig loadedConfig = LoadedConfig.baseline();
 
+        // 基本配置
         Map<String, String> config = loadedConfig.getConfigurationValues();
         config.put(AvailableSettings.DIALECT, MySQL5Dialect.class.getCanonicalName());
         config.put(AvailableSettings.DRIVER, Driver.class.getCanonicalName());
@@ -60,6 +78,7 @@ public class HibernateUtils {
             logger.debug("base hibernate config is {}", config);
         }
 
+        // 映射配置
         String packageToScan = properties.getProperty(FasterProperties.HIBERNATE_PACKAGE_TO_SCAN);
         List<Class> classes = PackageUtils.scan(packageToScan);
         List<MappingReference> mappingReferences = classes.stream()
@@ -82,4 +101,9 @@ public class HibernateUtils {
 
         return loadedConfig;
     }
+
+    public interface Runner {
+        void run(Session session);
+    }
+
 }

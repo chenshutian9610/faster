@@ -1,4 +1,4 @@
-package org.triski.faster.dao.mybatis.generator.reverse;
+package org.triski.faster.dao.mybatis;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FileUtils;
@@ -18,7 +18,7 @@ import java.io.InputStream;
  * @date 2019/7/19
  */
 @UtilityClass
-public class MybatisXmlUtils {
+class GeneratorConfigXmlUtils {
 
     private static final String MYBATIS_GENERATOR_CONFIG = "mybatis/generatorConfig.xml";
     private static final String PLUGIN_PLACE_HOLDER = "<!--generator.define.plugins-->";

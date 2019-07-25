@@ -1,4 +1,4 @@
-package org.triski.faster.dao.mybatis.generator.resultmap;
+package org.triski.faster.dao.mybatis.resultmap;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
