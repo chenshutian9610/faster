@@ -15,13 +15,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.triski.faster.commons.FasterProperties;
 import org.triski.faster.commons.exception.FasterException;
+import org.triski.faster.commons.utils.PackageUtils;
+import org.triski.faster.dao.mybatis.utils.GeneratorConfigXmlUtils;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author chenshutian
@@ -46,15 +51,21 @@ public class MybatisUtils {
         }
     }
 
+    /** 逆向工程, 需要配置 generator.hibernate.packageToScan */
+    public void generateModel(String propertiesClasspath) {
+        generateModel(propertiesClasspath, null);
+    }
+
     /** 逆向工程 */
     public void generateModel(String propertiesClasspath, Map<String, String> tables) {
-        if (tables.size() == 0) {
+        if (tables != null && tables.size() == 0) {
             return;
         }
         FasterProperties fasterProperties = config(propertiesClasspath);
+        String packageToScan = fasterProperties.getProperty(fasterProperties.HBM2DDL_PACKAGE_TO_SCAN);
         try (InputStream in = GeneratorConfigXmlUtils.process(fasterProperties)) {
             List<String> warnings = new ArrayList<>();
-            List<TableConfiguration> tableConfigurations = toTableConfigurations(tables);
+            List<TableConfiguration> tableConfigurations = toTableConfigurations(tables, packageToScan);
             Configuration configuration = new ConfigurationParser(warnings).parseConfiguration(in);
             configuration.getContexts().forEach(context -> {
                 tableConfigurations.forEach(tableConfiguration -> context.addTableConfiguration(tableConfiguration));
@@ -70,24 +81,45 @@ public class MybatisUtils {
     /** 初始化配置 */
     private FasterProperties config(String propertiesClasspath) {
         FasterProperties fasterProperties = FasterProperties.load(propertiesClasspath);
-        if (StringUtils.isBlank(fasterProperties.getProperty(FasterProperties.ROOT_PACKAGE))) {
-            String className = new RuntimeException().getStackTrace()[1].getClassName();
-            String packageName = className.substring(0, className.lastIndexOf("."));
-            fasterProperties.setProperty(FasterProperties.ROOT_PACKAGE, packageName);
+        if (StringUtils.isBlank(fasterProperties.getProperty(FasterProperties.MYBATIS_GENERATOR_ROOT_PACKAGE))) {
+            StackTraceElement[] stackTraceElements = new RuntimeException().getStackTrace();
+            for (StackTraceElement stackTraceElement : stackTraceElements) {
+                if (Objects.equals(stackTraceElement.getClassName(), MybatisUtils.class.getCanonicalName()) == false) {
+                    String className = stackTraceElement.getClassName();
+                    String packageName = className.substring(0, className.lastIndexOf("."));
+                    fasterProperties.setProperty(FasterProperties.MYBATIS_GENERATOR_ROOT_PACKAGE, packageName);
+                    break;
+                }
+            }
         }
         return fasterProperties;
     }
 
     /** 将 Map 转化为 TableConfiguration 列表 */
-    private List<TableConfiguration> toTableConfigurations(Map<String, String> tables) {
+    private List<TableConfiguration> toTableConfigurations(Map<String, String> tables, String packageToScan) {
         List<TableConfiguration> tableConfigurations = new ArrayList<>();
         Context context = new Context(ModelType.CONDITIONAL);
-        tables.forEach((tableName, className) -> {
-            TableConfiguration tc = new TableConfiguration(context);
-            tc.setDomainObjectName(className);
-            tc.setTableName(tableName);
-            tc.setMapperName(className + "Mapper");
-            tableConfigurations.add(tc);
+        if (tables != null && tables.size() != 0) {
+            tables.forEach((tableName, className) -> {
+                TableConfiguration tc = new TableConfiguration(context);
+                tc.setDomainObjectName(className);
+                tc.setTableName(tableName);
+                tc.setMapperName(className + "Mapper");
+                tableConfigurations.add(tc);
+            });
+        }
+        List<Class> classes = PackageUtils.scan(packageToScan);
+        classes.forEach(clazz -> {
+            if (clazz.isAnnotationPresent(Entity.class)) {
+                String className = clazz.getSimpleName();
+                Table table = (Table) clazz.getAnnotation(Table.class);
+                String tableName = table != null && StringUtils.isNotBlank(table.name()) ? table.name() : className;
+                TableConfiguration tc = new TableConfiguration(context);
+                tc.setDomainObjectName(className);
+                tc.setTableName(tableName);
+                tc.setMapperName(className + "Mapper");
+                tableConfigurations.add(tc);
+            }
         });
         return tableConfigurations;
     }

@@ -1,0 +1,41 @@
+# @reference org.triski.faster.commons.FasterProperties
+
+# {} 中表示可选值, 其他为默认值
+
+# must
+datasource:
+  driver-class-name:
+  url:
+  username:
+  password:
+
+# optional
+controller:
+  debug: {true/false}
+
+# optional, 如果使用正向工程, package-to-scan 必须配置
+generator:
+  hibernate:
+    package-to-scan:
+    dialect: org.triski.faster.dao.hibernate.utils.MySQL5DialectExt
+    charset: {utf-8/gbk/...}
+  mybatis:
+    style:
+      lombok: {true/false}
+      comment: {true/false}
+      date-api: {Instant/LocalDateTime}
+    root-package:
+    java-dir: src/main/java
+    resources-dir: src/main/resources
+    plugins:
+      - org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin
+      - org.mybatis.generator.plugins.ToStringPlugin
+      - org.mybatis.generator.plugins.EqualsHashCodePlugin
+      - org.mybatis.generator.plugins.FluentBuilderMethodsPlugin
+      - org.triski.faster.dao.mybatis.plugins.QuerySelectivePlugin
+      - org.triski.faster.dao.mybatis.plugins.ModelColumnPlugin
+      - org.triski.faster.dao.mybatis.plugins.ModelStylePlugin
+      - org.triski.faster.dao.mybatis.plugins.SQLExecutorPlugin
+      - org.triski.faster.dao.mybatis.plugins.InsertSelectiveWithGeneratedKeyPlugin
+      - org.triski.faster.dao.mybatis.plugins.BatchInsertPlugin
+      - org.triski.faster.dao.mybatis.plugins.BatchUpdatePlugin

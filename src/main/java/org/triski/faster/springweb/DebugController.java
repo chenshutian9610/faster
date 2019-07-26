@@ -45,7 +45,7 @@ public class DebugController {
     @Autowired
     private WebApplicationContext context;
 
-    @Value("${debug.enable:false}")
+    @Value("${controller.debug:false}")
     protected boolean debugEnable;
 
     @RequestMapping({"/debug", "/debug.do", "/debug.action", "/debug.htm", "/debug.html"})

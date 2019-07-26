@@ -39,7 +39,7 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
 
-        <jdbcConnection driverClass="${datasource.driverClassName:com.mysql.jdbc.Driver}"
+        <jdbcConnection driverClass="${datasource.driverClassName}"
                         connectionURL="${datasource.url}"
                         userId="${datasource.username}"
                         password="${datasource.password}"/>
@@ -48,15 +48,15 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="${mybatisGenerator.rootPackage}.model"
-                            targetProject="${mybatisGenerator.javaDir:src/main/java}">
+        <javaModelGenerator targetPackage="${generator.mybatis.rootPackage}.model"
+                            targetProject="${generator.mybatis.javaDir:src/main/java}">
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="mapper" targetProject="${mybatisGenerator.resourcesDir:src/main/resources}"/>
+        <sqlMapGenerator targetPackage="mapper" targetProject="${generator.mybatis.resourcesDir:src/main/resources}"/>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="${mybatisGenerator.rootPackage}.mapper"
-                             targetProject="${javaDir:src/main/java}"/>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="${generator.mybatis.rootPackage}.mapper"
+                             targetProject="${generator.mybatis.javaDir:src/main/java}"/>
 
         <!-- 这一句没什么用 !!! -->
         <table tableName="it won't be use"/>

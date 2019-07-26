@@ -12,26 +12,30 @@ import java.util.Properties;
 /**
  * @author chenshutian
  * @date 2019/7/19
- * @export load
+ * @export load, get
  */
 public class FasterProperties extends Properties {
     private static final Logger logger = LoggerFactory.getLogger(FasterProperties.class);
+
+    public static final String CONTROLLER_DEBUG = "controller.debug";
 
     public static final String DATABASE_DRIVER_CLASS_NAME = "datasource.driverClassName";
     public static final String DATABASE_URL = "datasource.url";
     public static final String DATABASE_USERNAME = "datasource.username";
     public static final String DATABASE_PASSWORD = "datasource.password";
 
-    public static final String HIBERNATE_PACKAGE_TO_SCAN = "hibernateGenerator.packageToScan";
+    public static final String HBM2DDL_PACKAGE_TO_SCAN = "generator.hibernate.packageToScan";
+    public static final String HBM2DDL_CHARSET = "generator.hibernate.charset";
+    public static final String HBM2DDL_DATABASE_DIALECT = "generator.hibernate.dialect";
 
-    public static final String MYBATIS_GENERATOR_STYLE_DATE_API = "mybatisGenerator.style.dateAPI";
-    public static final String MYBATIS_GENERATOR_STYLE_LOMBOK = "mybatisGenerator.style.lombok";
-    public static final String MYBATIS_GENERATOR_STYLE_COMMENT = "mybatisGenerator.style.comment";
+    public static final String MYBATIS_GENERATOR_STYLE_LOMBOK = "generator.mybatis.style.lombok";
+    public static final String MYBATIS_GENERATOR_STYLE_COMMENT = "generator.mybatis.style.comment";
+    public static final String MYBATIS_GENERATOR_STYLE_DATE_API = "generator.mybatis.style.dateApi";
 
-    public static final String MYBATIS_GENERATOR_PLUGIN = "mybatisGenerator.plugin";
-    public static final String ROOT_PACKAGE = "mybatisGenerator.rootPackage";
-    public static final String JAVA_DIR = "mybatisGenerator.javaDir";
-    public static final String RESOURCES_DIR = "mybatisGenerator.resourcesDir";
+    public static final String MYBATIS_GENERATOR_PLUGIN = "generator.mybatis.plugins";
+    public static final String MYBATIS_GENERATOR_ROOT_PACKAGE = "generator.mybatis.rootPackage";
+    public static final String MYBATIS_GENERATOR_JAVA_DIR = "generator.mybatis.javaDir";
+    public static final String MYBATIS_GENERATOR_RESOURCES_DIR = "generator.mybatis.resourcesDir";
 
     private static volatile FasterProperties fasterProperties = new FasterProperties();
     private static String propertiesClasspath;

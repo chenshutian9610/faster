@@ -117,7 +117,7 @@ public class JavaDocCache {
     }
 
     /**
-     * 从类列表转换为路径列表, 如 org.tree.model.User -> {srcDir}/org/tree/model/User.java
+     * 从类列表转换为路径列表, 如 org.tree.model2.User -> {srcDir}/org/tree/model2/User.java
      *
      * @param srcDir  源码目录, 如 src/main/java
      * @param classes 类列表

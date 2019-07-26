@@ -1,4 +1,4 @@
-package org.triski.faster.dao.mybatis;
+package org.triski.faster.dao.mybatis.utils;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FileUtils;
@@ -18,10 +18,10 @@ import java.io.InputStream;
  * @date 2019/7/19
  */
 @UtilityClass
-class GeneratorConfigXmlUtils {
+public class GeneratorConfigXmlUtils {
 
-    private static final String MYBATIS_GENERATOR_CONFIG = "mybatis/generatorConfig.xml";
-    private static final String PLUGIN_PLACE_HOLDER = "<!--generator.define.plugins-->";
+    private static final String MYBATIS_GENERATOR_CONFIG = "cfg/generatorConfig.xml";
+    private static final String PLUGIN_PLACE_HOLDER = "<!--generator.mybatis.plugins-->";
     private static final String PLUGIN_TAG_TEMPLATE = "<plugin type=\"%s\"/>";
 
     public InputStream process(FasterProperties fasterProperties) throws IOException {

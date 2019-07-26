@@ -31,15 +31,17 @@ public class RequestResult<T> {
     private String message;
     private T data;
 
-    {
-        success = true;
-        message = OPERATION_ERROR;
-    }
-
     public RequestResult() {
+        init();
     }
 
     public RequestResult(T data) {
+        init();
         this.data = data;
+    }
+
+    private void init() {
+        success = true;
+        message = OPERATION_ERROR;
     }
 }
