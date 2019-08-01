@@ -27,10 +27,7 @@ import org.triski.faster.dao.hibernate.utils.TableAnnotationUtils;
 
 import javax.persistence.Entity;
 import java.lang.reflect.Field;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -43,40 +40,8 @@ import java.util.stream.Collectors;
 public class HibernateUtils {
     private static final Logger logger = LoggerFactory.getLogger(HibernateUtils.class);
 
-    /** 正向工程: hibernate.hbm2ddl.auto = create */
-    public void createTable(String propertiesClasspath, EnumSet<TargetType> targetTypes) {
-        operateTable(propertiesClasspath, metadata -> {
-            SchemaExport schemaExport = new SchemaExport().setOutputFile("import.sql");
-            schemaExport.create(targetTypes, metadata);
-        });
-    }
-
-    /** 正向工程: hibernate.hbm2ddl.auto = create */
-    public void createTable(String propertiesClasspath) {
-        operateTable(propertiesClasspath, metadata -> {
-            SchemaExport schemaExport = new SchemaExport();
-            schemaExport.create(EnumSet.of(TargetType.DATABASE), metadata);
-        });
-    }
-
-    /** 正向工程: hibernate.hbm2ddl.auto = update */
-    public void updateTable(String propertiesClasspath, EnumSet<TargetType> targetTypes) {
-        operateTable(propertiesClasspath, metadata -> {
-            SchemaUpdate schemaUpdate = new SchemaUpdate().setOutputFile("import.sql");
-            schemaUpdate.execute(targetTypes, metadata);
-        });
-    }
-
-    /** 正向工程: hibernate.hbm2ddl.auto = update */
-    public void updateTable(String propertiesClasspath) {
-        operateTable(propertiesClasspath, metadata -> {
-            SchemaUpdate schemaUpdate = new SchemaUpdate();
-            schemaUpdate.execute(EnumSet.of(TargetType.DATABASE), metadata);
-        });
-    }
-
     @MainMethod
-    private void operateTable(String propertiesClasspath, Consumer<Metadata> consumer) {
+    private void generateTable(String propertiesClasspath) {
         FasterProperties properties = FasterProperties.load(propertiesClasspath);
         LoadedConfig loadedConfig = LoadedConfig.baseline();
         // 基本配置
@@ -139,7 +104,28 @@ public class HibernateUtils {
             });
         });
         // 操作数据库
-        consumer.accept(metadata);
+        EnumSet<TargetType> targetTypes = getTargetTypes(properties.getProperty(FasterProperties.HBM2DDL_TARGET_TYPE));
+        String hbm2ddl = properties.getProperty(FasterProperties.HBM2DDL_OPERATION_MODE);
+        if (StringUtils.isBlank(hbm2ddl)) {
+            hbm2ddl = "create";
+        }
+        String output = properties.getProperty(FasterProperties.HBM2DDL_OUTPUT_FILE);
+        if(StringUtils.isBlank(output)) {
+            output = "import.sql";
+        }
+        if (Objects.equals(hbm2ddl, "create") || Objects.equals(hbm2ddl, "createOnly")) {
+            SchemaExport schemaExport = new SchemaExport().setOutputFile(output);
+            if (Objects.equals(hbm2ddl, "create")) {
+                schemaExport.create(targetTypes, metadata);
+            } else {
+                schemaExport.createOnly(targetTypes, metadata);
+            }
+        } else if (Objects.equals(hbm2ddl, "update")) {
+            SchemaUpdate schemaUpdate = new SchemaUpdate().setOutputFile(output);
+            schemaUpdate.execute(targetTypes, metadata);
+        } else {
+            throw new FasterException("{} can not be config value: {}", FasterProperties.HBM2DDL_OPERATION_MODE, hbm2ddl);
+        }
         serviceRegistry.close();
     }
 
@@ -165,6 +151,24 @@ public class HibernateUtils {
         } else if (defaultValue != null) {
             map.put(key, value);
         }
+    }
+
+    private EnumSet<TargetType> getTargetTypes(String targetType) {
+        EnumSet<TargetType> targetTypes = EnumSet.noneOf(TargetType.class);
+        if (StringUtils.isBlank(targetType)) {
+            targetTypes.add(TargetType.DATABASE);
+        } else {
+            if (targetType.contains("database")) {
+                targetTypes.add(TargetType.DATABASE);
+            }
+            if (targetType.contains("script")) {
+                targetTypes.add(TargetType.SCRIPT);
+            }
+            if (targetType.contains("stdout")) {
+                targetTypes.add(TargetType.STDOUT);
+            }
+        }
+        return targetTypes;
     }
 
     public interface Runner {

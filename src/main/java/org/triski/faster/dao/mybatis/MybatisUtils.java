@@ -65,7 +65,8 @@ public class MybatisUtils {
         String packageToScan = fasterProperties.getProperty(fasterProperties.HBM2DDL_PACKAGE_TO_SCAN);
         try (InputStream in = GeneratorConfigXmlUtils.process(fasterProperties)) {
             List<String> warnings = new ArrayList<>();
-            List<TableConfiguration> tableConfigurations = toTableConfigurations(tables, packageToScan);
+            List<TableConfiguration> tableConfigurations =
+                    tables != null ? toTableConfigurations(tables) : toTableConfigurations(packageToScan);
             Configuration configuration = new ConfigurationParser(warnings).parseConfiguration(in);
             configuration.getContexts().forEach(context -> {
                 tableConfigurations.forEach(tableConfiguration -> context.addTableConfiguration(tableConfiguration));
@@ -96,7 +97,7 @@ public class MybatisUtils {
     }
 
     /** 将 Map 转化为 TableConfiguration 列表 */
-    private List<TableConfiguration> toTableConfigurations(Map<String, String> tables, String packageToScan) {
+    private List<TableConfiguration> toTableConfigurations(Map<String, String> tables) {
         List<TableConfiguration> tableConfigurations = new ArrayList<>();
         Context context = new Context(ModelType.CONDITIONAL);
         if (tables != null && tables.size() != 0) {
@@ -108,6 +109,13 @@ public class MybatisUtils {
                 tableConfigurations.add(tc);
             });
         }
+        return tableConfigurations;
+    }
+
+    /** 将 packageToScan 下所有 @Entity 类转化为 TableConfiguration 列表 */
+    private List<TableConfiguration> toTableConfigurations(String packageToScan) {
+        List<TableConfiguration> tableConfigurations = new ArrayList<>();
+        Context context = new Context(ModelType.CONDITIONAL);
         List<Class> classes = PackageUtils.scan(packageToScan);
         classes.forEach(clazz -> {
             if (clazz.isAnnotationPresent(Entity.class)) {

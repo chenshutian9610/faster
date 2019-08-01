@@ -25,6 +25,9 @@ public class FasterProperties extends Properties {
     public static final String DATABASE_PASSWORD = "datasource.password";
 
     public static final String HBM2DDL_PACKAGE_TO_SCAN = "generator.hibernate.packageToScan";
+    public static final String HBM2DDL_OPERATION_MODE = "generator.hibernate.hbm2ddl";
+    public static final String HBM2DDL_TARGET_TYPE = "generator.hibernate.targetType";
+    public static final String HBM2DDL_OUTPUT_FILE = "generator.hibernate.output";
     public static final String HBM2DDL_CHARSET = "generator.hibernate.charset";
     public static final String HBM2DDL_DATABASE_DIALECT = "generator.hibernate.dialect";
 

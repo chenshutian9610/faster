@@ -1,16 +1,20 @@
 package org.triski.faster;
 
-import org.hibernate.dialect.MySQL55Dialect;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.tool.schema.TargetType;
 import org.junit.jupiter.api.Test;
+
+import java.net.URLEncoder;
+import java.util.EnumSet;
 
 /**
  * @author chenshutian
  * @date 2019/7/26
  */
+@Slf4j
 public class MainTest {
     @Test
-    void test() {
-        MySQL55Dialect dialect = new MySQL55Dialect();
-        System.out.println();
+    void test() throws Exception{
+        System.out.println(URLEncoder.encode("@","gbk"));
     }
 }

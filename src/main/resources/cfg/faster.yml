@@ -1,6 +1,6 @@
 # @reference org.triski.faster.commons.FasterProperties
 
-# {} 中表示可选值, 其他为默认值
+# [] 可选值, / 分隔符, `` 默认值
 
 # must
 datasource:
@@ -11,19 +11,22 @@ datasource:
 
 # optional
 controller:
-  debug: {true/false}
+  debug: # [true/`false`]
 
-# optional, 如果使用正向工程, package-to-scan 必须配置
+# optional, 如果使用 hibernate 正向工程, package-to-scan 必须配置
 generator:
   hibernate:
     package-to-scan:
+    hbm2ddl: # [`create`/update/create_only/createOnly]
+    target-type: # [`database`/script/stdout]
+    output: import.sql
     dialect: org.triski.faster.dao.hibernate.utils.MySQL5DialectExt
-    charset: {utf-8/gbk/...}
+    charset: # [`utf-8`/gbk/...]
   mybatis:
     style:
-      lombok: {true/false}
-      comment: {true/false}
-      date-api: {Instant/LocalDateTime}
+      lombok: # [true/`false`]
+      comment: # [true/`false`]
+      date-api: # [Instant/LocalDateTime]
     root-package:
     java-dir: src/main/java
     resources-dir: src/main/resources
