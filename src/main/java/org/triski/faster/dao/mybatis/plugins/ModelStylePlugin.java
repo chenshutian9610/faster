@@ -6,10 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.dom.java.Field;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.java.*;
 import org.triski.faster.commons.FasterProperties;
 import org.triski.faster.commons.annotation.Comment;
 
@@ -70,6 +67,19 @@ public class ModelStylePlugin extends PluginAdapter {
             topLevelClass.getMethods().clear();
         }
 
+        // 添加常量
+        boolean constantEnable = Objects.equals(properties.getProperty(FasterProperties.MYBATIS_GENERATOR_STYLE_CONSTANT), "true");
+        if (constantEnable) {
+            int i = 0;
+            String tableName = introspectedTable.getTableConfiguration().getTableName();
+            topLevelClass.getFields().add(i++, getConstantField("TABLE_NAME", tableName));
+            List<IntrospectedColumn> columns = introspectedTable.getAllColumns();
+            for (IntrospectedColumn column : columns) {
+                String columnName = column.getActualColumnName();
+                topLevelClass.getFields().add(i++, getConstantField(columnName.toUpperCase(), String.format("%s.%s", tableName, columnName)));
+            }
+        }
+
         // 添加注释 (使用 @Comment 或 javadoc 的方式)
         Map<String, String> comments = getColumnComment(introspectedTable);
         String annotation = "";
@@ -112,5 +122,14 @@ public class ModelStylePlugin extends PluginAdapter {
             className = className.substring(className.lastIndexOf(".") + 1);
         }
         return String.format("@%s(\"%s\")", className, value);
+    }
+
+    private Field getConstantField(String constantName, String value) {
+        Field field = new Field(constantName, new FullyQualifiedJavaType("String"));
+        field.setVisibility(JavaVisibility.PUBLIC);
+        field.setStatic(true);
+        field.setFinal(true);
+        field.setInitializationString(String.format("\"%s\"", value));
+        return field;
     }
 }

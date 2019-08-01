@@ -27,6 +27,7 @@ generator:
       lombok: # [true/`false`]
       comment: # [true/`false`]
       date-api: # [Instant/LocalDateTime]
+      constant: # [true/false]
     root-package:
     java-dir: src/main/java
     resources-dir: src/main/resources

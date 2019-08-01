@@ -33,6 +33,7 @@ public class FasterProperties extends Properties {
 
     public static final String MYBATIS_GENERATOR_STYLE_LOMBOK = "generator.mybatis.style.lombok";
     public static final String MYBATIS_GENERATOR_STYLE_COMMENT = "generator.mybatis.style.comment";
+    public static final String MYBATIS_GENERATOR_STYLE_CONSTANT = "generator.mybatis.style.constant";
     public static final String MYBATIS_GENERATOR_STYLE_DATE_API = "generator.mybatis.style.dateApi";
 
     public static final String MYBATIS_GENERATOR_PLUGIN = "generator.mybatis.plugins";
